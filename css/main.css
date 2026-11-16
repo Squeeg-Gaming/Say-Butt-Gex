@@ -1,28 +1,29 @@
 :root {
-    --color-background: white;
-    --color-on-background: black;
-    --color-background-hover: #eee;
-    --color-on-background-hover: black;
-    --site-background-overlay: rgba(255, 255, 255, 0.72);
-    --color-primary: #722e00;
-    --color-on-primary: white;
-    --color-error: #de0000;
-    --color-on-error: white;
+    --color-background: #f4eadb;
+    --color-on-background: #3e2618;
+    --color-background-hover: #e7d3b1;
+    --color-on-background-hover: #2b1c12;
+    --site-background-overlay: rgba(244, 234, 219, 0.76);
+    --color-primary: #6b3f1d;
+    --color-primary-disabled: #b98a5a;
+    --color-on-primary: #fffaf4;
+    --color-error: #8b4a2a;
+    --color-on-error: #fffaf4;
 }
 
 main.dark,
 header.dark {
     color-scheme: dark;
-    --color-background: #1c1b1f;
-    --color-on-background: white;
-    --color-background-hover: #27262c;
-    --color-on-background-hover: white;
-    --site-background-overlay: rgba(0, 0, 0, 0.58);
-    --color-primary: #283593;
-    --color-primary-disabled: #1f213c;
-    --color-on-primary: white;
-    --color-error: #de0000;
-    --color-on-error: white;
+    --color-background: #2a1c15;
+    --color-on-background: #f5ebdf;
+    --color-background-hover: #473327;
+    --color-on-background-hover: #fff7f1;
+    --site-background-overlay: rgba(25, 17, 13, 0.68);
+    --color-primary: #8c5b31;
+    --color-primary-disabled: #584032;
+    --color-on-primary: #fffaf6;
+    --color-error: #a9613d;
+    --color-on-error: #fffaf6;
 }
 
 html,
@@ -89,7 +90,7 @@ main {
             var(--site-background-overlay),
             var(--site-background-overlay)
         ),
-        url("../assets/site-background.jpg");
+        url("../assets/site-background.png");
     background-size: cover;
     background-position: center;
 }

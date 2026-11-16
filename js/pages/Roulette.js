@@ -12,7 +12,7 @@ export default {
         </main>
         <main v-else class="page-roulette">
             <div class="sidebar">
-                <p class="type-label-md" style="color: #aaa">
+                <p class="type-label-md" style="color: #7a5a46">
                     Shameless copy of the Extreme Demon Roulette by <a href="https://matcool.github.io/extreme-demon-roulette/" target="_blank">matcool</a>.
                 </p>
                 <form class="options">
@@ -26,7 +26,7 @@ export default {
                     </div>
                     <Btn @click.prevent="onStart">{{ levels.length === 0 ? 'Start' : 'Restart'}}</Btn>
                 </form>
-                <p class="type-label-md" style="color: #aaa">
+                <p class="type-label-md" style="color: #7a5a46">
                     The roulette saves automatically.
                 </p>
                 <form class="save">
@@ -48,7 +48,7 @@ export default {
                             <div class="meta">
                                 <p>#{{ level.rank }}</p>
                                 <h2>{{ level.name }}</h2>
-                                <p style="color: #00b54b; font-weight: 700">{{ progression[i] }}%</p>
+                                <p style="color: #7a4d2e; font-weight: 700">{{ progression[i] }}%</p>
                             </div>
                         </div>
                         <!-- Current Level -->
@@ -64,7 +64,7 @@ export default {
                             <form class="actions" v-if="!givenUp">
                                 <input type="number" v-model="percentage" :placeholder="placeholder" :min="currentPercentage + 1" max=100>
                                 <Btn @click.prevent="onDone">Done</Btn>
-                                <Btn @click.prevent="onGiveUp" style="background-color: #e91e63;">Give Up</Btn>
+                                <Btn @click.prevent="onGiveUp" style="background-color: #8c4b33;">Give Up</Btn>
                             </form>
                         </div>
                         <!-- Results -->
@@ -83,7 +83,7 @@ export default {
                                 <div class="meta">
                                     <p>#{{ level.rank }}</p>
                                     <h2>{{ level.name }}</h2>
-                                    <p style="color: #d50000; font-weight: 700">{{ currentPercentage + 2 + i }}%</p>
+                                    <p style="color: #7d4a2f; font-weight: 700">{{ currentPercentage + 2 + i }}%</p>
                                 </div>
                             </div>
                         </template>
@@ -120,14 +120,18 @@ export default {
         this.fileInput.addEventListener('change', this.onImportUpload);
 
         // Load progress from local storage
-        const roulette = JSON.parse(localStorage.getItem('roulette'));
+        try {
+            const roulette = JSON.parse(localStorage.getItem('roulette'));
 
-        if (!roulette) {
-            return;
+            if (!roulette) {
+                return;
+            }
+
+            this.levels = roulette.levels;
+            this.progression = roulette.progression;
+        } catch {
+            localStorage.removeItem('roulette');
         }
-
-        this.levels = roulette.levels;
-        this.progression = roulette.progression;
     },
     computed: {
         currentLevel() {
@@ -252,7 +256,12 @@ export default {
                 return;
             }
 
-            this.fileInput.showPicker();
+            if (typeof this.fileInput.showPicker === 'function') {
+                this.fileInput.showPicker();
+                return;
+            }
+
+            this.fileInput.click();
         },
         async onImportUpload() {
             if (this.fileInput.files.length === 0) return;

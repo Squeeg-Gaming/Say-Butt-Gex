@@ -1,6 +1,8 @@
 import routes from './routes.js';
+import { enableRandomTextFonts } from './randomFonts.js';
 
 export const store = Vue.reactive({
+    musicPlaying: false,
     dark: (() => {
         try {
             const value = localStorage.getItem('dark');
@@ -12,6 +14,23 @@ export const store = Vue.reactive({
     toggleDark() {
         this.dark = !this.dark;
         localStorage.setItem('dark', JSON.stringify(this.dark));
+    },
+    async toggleMusic() {
+        const music = document.getElementById('background-music');
+        if (this.musicPlaying) {
+            music.pause();
+            this.musicPlaying = false;
+            return;
+        }
+
+        try {
+            await music.play();
+            this.musicPlaying = true;
+        } catch (error) {
+            if (error.name !== 'NotAllowedError') {
+                console.error('Unable to play background music.', error);
+            }
+        }
     },
 });
 
@@ -26,3 +45,5 @@ const router = VueRouter.createRouter({
 app.use(router);
 
 app.mount('#app');
+enableRandomTextFonts();
+store.toggleMusic();

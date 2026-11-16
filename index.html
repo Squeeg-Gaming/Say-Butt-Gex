@@ -54,6 +54,14 @@
                 <div class="nav__actions">
                     <button
                         class="nav__icon"
+                        @click.prevent="store.toggleMusic()"
+                        :aria-label="store.musicPlaying ? 'Pause background music' : 'Play background music'"
+                        :title="store.musicPlaying ? 'Pause background music' : 'Play background music'"
+                    >
+                        <span aria-hidden="true">{{ store.musicPlaying ? '♫' : '♪' }}</span>
+                    </button>
+                    <button
+                        class="nav__icon"
                         @click.prevent="store.toggleDark()"
                     >
                         <img
@@ -75,6 +83,13 @@
                 </div>
             </nav>
         </header>
+        <audio
+            id="background-music"
+            src="/assets/fart-sounds.mp3"
+            hidden
+            loop
+            preload="auto"
+        ></audio>
         <router-view :class="{ dark: store.dark }"></router-view>
     </body>
 </html>

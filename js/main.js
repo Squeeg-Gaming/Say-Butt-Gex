@@ -1,13 +1,14 @@
 import routes from './routes.js';
 import { setRandomTextFontsEnabled } from './randomFonts.js';
 
-const siteTitle =
+const initialSiteTitle =
     Math.random() < 1 / 33 ? 'I LOVE TOM PEARL' : 'The Poop List';
-document.title = siteTitle;
+document.title = initialSiteTitle;
 
 export const store = Vue.reactive({
     musicPlaying: false,
     easterEggEnabled: false,
+    siteTitle: initialSiteTitle,
     dark: (() => {
         try {
             const value = localStorage.getItem('dark');
@@ -23,6 +24,10 @@ export const store = Vue.reactive({
     toggleEasterEgg() {
         this.easterEggEnabled = !this.easterEggEnabled;
         setRandomTextFontsEnabled(this.easterEggEnabled);
+        this.siteTitle = this.easterEggEnabled
+            ? 'I LOVE TOM PEARL'
+            : initialSiteTitle;
+        document.title = this.siteTitle;
     },
     async toggleMusic() {
         const music = document.getElementById('background-music');
@@ -44,7 +49,7 @@ export const store = Vue.reactive({
 });
 
 const app = Vue.createApp({
-    data: () => ({ store, siteTitle }),
+    data: () => ({ store }),
 });
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),

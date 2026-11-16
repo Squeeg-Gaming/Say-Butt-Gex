@@ -38,7 +38,7 @@
         <header :class="{ dark: store.dark }">
             <div class="logo">
                 <img src="/js/list_icon.png" alt="Site logo" />
-                <h2>{{ siteTitle }}</h2>
+                <h2>{{ store.siteTitle }}</h2>
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">
@@ -96,6 +96,7 @@
             class="easter-egg-toggle"
             data-easter-egg-toggle
             type="button"
+            v-if="!store.easterEggEnabled"
             :aria-pressed="store.easterEggEnabled"
             :aria-label="store.easterEggEnabled ? 'Turn off the easter egg' : 'Turn on the easter egg'"
             :title="store.easterEggEnabled ? 'Turn off the easter egg' : 'Turn on the easter egg'"

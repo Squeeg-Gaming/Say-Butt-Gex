@@ -12,10 +12,16 @@ const fonts = [
     '"Lexend Deca", sans-serif',
 ];
 
-const assignedElements = new WeakSet();
+const assignedElements = new Map();
+let observer;
+let enabled = false;
 
 function randomizeElementFont(element) {
-    if (!(element instanceof HTMLElement) || assignedElements.has(element)) {
+    if (
+        !(element instanceof HTMLElement) ||
+        element.hasAttribute('data-easter-egg-toggle') ||
+        assignedElements.has(element)
+    ) {
         return;
     }
 
@@ -38,9 +44,9 @@ function randomizeElementFont(element) {
             (element.value || element.placeholder));
 
     if (hasText || hasInputText) {
+        assignedElements.set(element, element.style.fontFamily);
         element.style.fontFamily =
             fonts[Math.floor(Math.random() * fonts.length)];
-        assignedElements.add(element);
     }
 }
 
@@ -65,10 +71,30 @@ function randomizeTextFonts(root) {
     }
 }
 
-export function enableRandomTextFonts() {
+export function setRandomTextFontsEnabled(value) {
+    if (enabled === value) {
+        return;
+    }
+
+    enabled = value;
+
+    if (!enabled) {
+        observer.disconnect();
+        observer = undefined;
+        assignedElements.forEach((fontFamily, element) => {
+            element.style.fontFamily = fontFamily;
+        });
+        assignedElements.clear();
+        return;
+    }
+
     randomizeTextFonts(document.body);
 
-    const observer = new MutationObserver((mutations) => {
+    observer = new MutationObserver((mutations) => {
+        if (!enabled) {
+            return;
+        }
+
         mutations.forEach((mutation) => {
             if (mutation.type === 'characterData') {
                 randomizeElementFont(mutation.target.parentElement);

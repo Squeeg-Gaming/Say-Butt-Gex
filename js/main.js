@@ -1,5 +1,5 @@
 import routes from './routes.js';
-import { enableRandomTextFonts } from './randomFonts.js';
+import { setRandomTextFontsEnabled } from './randomFonts.js';
 
 const siteTitle =
     Math.random() < 1 / 33 ? 'I LOVE TOM PEARL' : 'The Poop List';
@@ -7,6 +7,7 @@ document.title = siteTitle;
 
 export const store = Vue.reactive({
     musicPlaying: false,
+    easterEggEnabled: false,
     dark: (() => {
         try {
             const value = localStorage.getItem('dark');
@@ -18,6 +19,10 @@ export const store = Vue.reactive({
     toggleDark() {
         this.dark = !this.dark;
         localStorage.setItem('dark', JSON.stringify(this.dark));
+    },
+    toggleEasterEgg() {
+        this.easterEggEnabled = !this.easterEggEnabled;
+        setRandomTextFontsEnabled(this.easterEggEnabled);
     },
     async toggleMusic() {
         const music = document.getElementById('background-music');
@@ -79,5 +84,3 @@ if (music) {
     document.addEventListener('keydown', startMusic);
     window.setTimeout(startMusic, 2000);
 }
-
-enableRandomTextFonts();

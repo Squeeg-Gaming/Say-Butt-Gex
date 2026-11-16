@@ -73,7 +73,7 @@ if (music) {
 
     document.addEventListener('pointerdown', startMusic);
     document.addEventListener('keydown', startMusic);
-    startMusic();
+    window.setTimeout(startMusic, 2000);
 }
 
 enableRandomTextFonts();

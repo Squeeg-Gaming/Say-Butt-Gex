@@ -6,9 +6,9 @@ export const store = Vue.reactive({
     dark: (() => {
         try {
             const value = localStorage.getItem('dark');
-            return value === null ? false : JSON.parse(value);
+            return value === null ? true : JSON.parse(value);
         } catch {
-            return false;
+            return true;
         }
     })(),
     toggleDark() {
@@ -46,4 +46,3 @@ app.use(router);
 
 app.mount('#app');
 enableRandomTextFonts();
-store.toggleMusic();

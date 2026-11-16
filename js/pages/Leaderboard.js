@@ -42,7 +42,7 @@ export default {
                     </table>
                 </div>
                 <div class="player-container">
-                    <div class="player">
+                    <div class="player" v-if="entry">
                         <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
                         <h3>{{ entry.total }}</h3>
                         <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length}})</h2>
@@ -88,13 +88,14 @@ export default {
                             </tr>
                         </table>
                     </div>
+                    <p v-else>No leaderboard entries.</p>
                 </div>
             </div>
         </main>
     `,
     computed: {
         entry() {
-            return this.leaderboard[this.selected];
+            return this.leaderboard[this.selected] ?? null;
         },
     },
     async mounted() {

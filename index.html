@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=1024" />
         <title>Your List Name</title>
 
-        <!-- Replace your server icon by uploading an image file named "list_icon.png"-->
-        <link rel="icon" href="/list_icon.png" />
+        <!-- Replace the site icon by uploading an image file named "list_icon.png" -->
+        <link rel="icon" type="image/png" href="./js/list_icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -37,7 +37,8 @@
     <body id="app">
         <header :class="{ dark: store.dark }">
             <div class="logo">
-                <h2>Sample List</h2>
+                <img src="/js/list_icon.png" alt="Site logo" />
+                <h2>The Poop List</h2>
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">

@@ -24,7 +24,7 @@ export default {
                         <input type="checkbox" id="extended" value="Extended List" v-model="useExtendedList">
                         <label for="extended">Extended List</label>
                     </div>
-                    <Btn @click.native.prevent="onStart">{{ levels.length === 0 ? 'Start' : 'Restart'}}</Btn>
+                    <Btn @click.prevent="onStart">{{ levels.length === 0 ? 'Start' : 'Restart'}}</Btn>
                 </form>
                 <p class="type-label-md" style="color: #aaa">
                     The roulette saves automatically.
@@ -32,8 +32,8 @@ export default {
                 <form class="save">
                     <p>Manual Load/Save</p>
                     <div class="btns">
-                        <Btn @click.native.prevent="onImport">Import</Btn>
-                        <Btn :disabled="!isActive" @click.native.prevent="onExport">Export</Btn>
+                        <Btn @click.prevent="onImport">Import</Btn>
+                        <Btn :disabled="!isActive" @click.prevent="onExport">Export</Btn>
                     </div>
                 </form>
             </div>
@@ -63,8 +63,8 @@ export default {
                             </div>
                             <form class="actions" v-if="!givenUp">
                                 <input type="number" v-model="percentage" :placeholder="placeholder" :min="currentPercentage + 1" max=100>
-                                <Btn @click.native.prevent="onDone">Done</Btn>
-                                <Btn @click.native.prevent="onGiveUp" style="background-color: #e91e63;">Give Up</Btn>
+                                <Btn @click.prevent="onDone">Done</Btn>
+                                <Btn @click.prevent="onGiveUp" style="background-color: #e91e63;">Give Up</Btn>
                             </form>
                         </div>
                         <!-- Results -->
@@ -72,7 +72,7 @@ export default {
                             <h1>Results</h1>
                             <p>Number of levels: {{ progression.length }}</p>
                             <p>Highest percent: {{ currentPercentage }}%</p>
-                            <Btn v-if="currentPercentage < 99 && !hasCompleted" @click.native.prevent="showRemaining = true">Show remaining levels</Btn>
+                            <Btn v-if="currentPercentage < 99 && !hasCompleted" @click.prevent="showRemaining = true">Show remaining levels</Btn>
                         </div>
                         <!-- Remaining Levels -->
                         <template v-if="givenUp && showRemaining">
@@ -171,6 +171,12 @@ export default {
 
             const fullList = await fetchList();
 
+            if (!fullList) {
+                this.loading = false;
+                this.showToast('List could not be loaded. Try again later.');
+                return;
+            }
+
             if (fullList.filter(([_, err]) => err).length > 0) {
                 this.loading = false;
                 this.showToast(
@@ -189,6 +195,11 @@ export default {
             if (this.useMainList) list.push(...fullListMapped.slice(0, 75));
             if (this.useExtendedList) {
                 list.push(...fullListMapped.slice(75, 150));
+            }
+            if (list.length === 0) {
+                this.loading = false;
+                this.showToast('No levels are available for the selected lists.');
+                return;
             }
 
             // random 100 levels

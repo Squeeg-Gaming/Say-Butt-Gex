@@ -6,14 +6,28 @@ import { round, score } from './score.js';
 const dir = '/data';
 
 export async function fetchList() {
-    const listResult = await fetch(`${dir}/_list.json`);
     try {
+        const listResult = await fetch(`${dir}/_list.json`);
+        if (!listResult.ok) {
+            throw new Error(`Request failed with status ${listResult.status}`);
+        }
         const list = await listResult.json();
+        if (!Array.isArray(list)) {
+            throw new Error('List data must be an array.');
+        }
         return await Promise.all(
             list.map(async (path, rank) => {
-                const levelResult = await fetch(`${dir}/${path}.json`);
                 try {
+                    const levelResult = await fetch(`${dir}/${path}.json`);
+                    if (!levelResult.ok) {
+                        throw new Error(
+                            `Request failed with status ${levelResult.status}`,
+                        );
+                    }
                     const level = await levelResult.json();
+                    if (!Array.isArray(level.records)) {
+                        throw new Error('Level records must be an array.');
+                    }
                     return [
                         {
                             ...level,
@@ -39,15 +53,27 @@ export async function fetchList() {
 export async function fetchEditors() {
     try {
         const editorsResults = await fetch(`${dir}/_editors.json`);
+        if (!editorsResults.ok) {
+            throw new Error(
+                `Request failed with status ${editorsResults.status}`,
+            );
+        }
         const editors = await editorsResults.json();
+        if (!Array.isArray(editors)) {
+            throw new Error('Editor data must be an array.');
+        }
         return editors;
     } catch {
+        console.error('Failed to load list editors.');
         return null;
     }
 }
 
 export async function fetchLeaderboard() {
     const list = await fetchList();
+    if (!list) {
+        return [[], ['_list']];
+    }
 
     const scoreMap = {};
     const errs = [];

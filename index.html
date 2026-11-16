@@ -53,6 +53,7 @@
                 </router-link>
                 <div class="nav__actions">
                     <button
+                        id="music-toggle"
                         class="nav__icon"
                         @click.prevent="store.toggleMusic()"
                         :aria-label="store.musicPlaying ? 'Pause background music' : 'Play background music'"

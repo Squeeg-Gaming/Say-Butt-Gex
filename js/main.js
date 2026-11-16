@@ -2,7 +2,7 @@ import routes from './routes.js';
 import { enableRandomTextFonts } from './randomFonts.js';
 
 export const store = Vue.reactive({
-    musicPlaying: true,
+    musicPlaying: false,
     dark: (() => {
         try {
             const value = localStorage.getItem('dark');
@@ -50,13 +50,30 @@ const music = document.getElementById('background-music');
 if (music) {
     music.loop = true;
     music.muted = false;
-    music.play().then(() => {
-        store.musicPlaying = true;
-    }).catch((error) => {
-        if (error.name !== 'NotAllowedError') {
-            console.error('Unable to play background music.', error);
+
+    const removeInteractionListeners = () => {
+        document.removeEventListener('pointerdown', startMusic);
+        document.removeEventListener('keydown', startMusic);
+    };
+    const startMusic = (event) => {
+        if (event && event.target.closest && event.target.closest('#music-toggle')) {
+            return;
         }
-    });
+
+        music.play().then(() => {
+            store.musicPlaying = true;
+            removeInteractionListeners();
+        }).catch((error) => {
+            store.musicPlaying = false;
+            if (error.name !== 'NotAllowedError') {
+                console.error('Unable to play background music.', error);
+            }
+        });
+    };
+
+    document.addEventListener('pointerdown', startMusic);
+    document.addEventListener('keydown', startMusic);
+    startMusic();
 }
 
 enableRandomTextFonts();

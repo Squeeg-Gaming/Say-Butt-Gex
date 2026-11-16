@@ -1,6 +1,10 @@
 import routes from './routes.js';
 import { enableRandomTextFonts } from './randomFonts.js';
 
+const siteTitle =
+    Math.random() < 1 / 33 ? 'I LOVE TOM PEARL' : 'The Poop List';
+document.title = siteTitle;
+
 export const store = Vue.reactive({
     musicPlaying: false,
     dark: (() => {
@@ -35,7 +39,7 @@ export const store = Vue.reactive({
 });
 
 const app = Vue.createApp({
-    data: () => ({ store }),
+    data: () => ({ store, siteTitle }),
 });
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),

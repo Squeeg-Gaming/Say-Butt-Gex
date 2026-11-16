@@ -76,6 +76,9 @@ header .logo img {
     object-fit: cover;
     border-radius: 0.25rem;
 }
+header .logo h2 {
+    align-self: center;
+}
 header .nav {
     flex: 1;
 }

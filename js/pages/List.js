@@ -99,30 +99,16 @@ export default {
                         </ol>
                     </template>
                     <h3>Submission Requirements</h3>
-                    <p>
-                        Achieved the record without using hacks (however, FPS bypass is allowed, up to 360fps)
-                    </p>
-                    <p>
-                        Achieved the record on the level that is listed on the site - please check the level ID before you submit a record
-                    </p>
-                    <p>
-                        Have either source audio or clicks/taps in the video. Edited audio only does not count
-                    </p>
-                    <p>
-                        The recording must have a previous attempt and entire death animation shown before the completion, unless the completion is on the first attempt. Everyplay records are exempt from this
-                    </p>
-                    <p>
-                        The recording must also show the player hit the endwall, or the completion will be invalidated.
-                    </p>
-                    <p>
-                        Do not use secret routes or bug routes
-                    </p>
-                    <p>
-                        Do not use easy modes, only a record of the unmodified level qualifies
-                    </p>
-                    <p>
-                        Once a level falls onto the Legacy List, we accept records for it for 24 hours after it falls off, then afterwards we never accept records for said level
-                    </p>
+                    <ul class="requirements">
+                        <li>Records must be achieved without hacks. FPS bypass is allowed up to 360 FPS.</li>
+                        <li>Records must be achieved on the level listed on this site. Check the level ID before submitting.</li>
+                        <li>Videos must include the source audio or audible clicks/taps. Edited audio alone does not count.</li>
+                        <li>Show the previous attempt and full death animation before the completion. This is not required for a first-attempt completion. Everyplay recordings are exempt.</li>
+                        <li>Show the player reaching the end wall, or the completion will be invalid.</li>
+                        <li>Secret routes and bug routes are not allowed.</li>
+                        <li>Easy modes are not allowed. Only records on the unmodified level qualify.</li>
+                        <li>Records are accepted for 24 hours after a level moves to the Legacy List. After that, no further records will be accepted.</li>
+                    </ul>
                 </div>
             </div>
         </main>

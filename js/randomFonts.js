@@ -10,17 +10,28 @@ const fonts = [
     '"Lucida Console", monospace',
     '"Palatino Linotype", serif',
     '"Lexend Deca", sans-serif',
+    '"Arial Black", sans-serif',
+    '"Franklin Gothic Medium", sans-serif',
+    '"Segoe UI", sans-serif',
+    'Tahoma, sans-serif',
+    'Garamond, serif',
+    'Helvetica, sans-serif',
+    '"Brush Script MT", cursive',
+    'Papyrus, fantasy',
+    'system-ui, sans-serif',
+    'cursive',
+    'fantasy',
 ];
 
 const assignedElements = new Map();
 let observer;
 let enabled = false;
 
-function randomizeElementFont(element) {
+function randomizeElementFont(element, force = false) {
     if (
         !(element instanceof HTMLElement) ||
         element.hasAttribute('data-easter-egg-toggle') ||
-        assignedElements.has(element)
+        (assignedElements.has(element) && !force)
     ) {
         return;
     }
@@ -44,7 +55,9 @@ function randomizeElementFont(element) {
             (element.value || element.placeholder));
 
     if (hasText || hasInputText) {
-        assignedElements.set(element, element.style.fontFamily);
+        if (!assignedElements.has(element)) {
+            assignedElements.set(element, element.style.fontFamily);
+        }
         element.style.fontFamily =
             fonts[Math.floor(Math.random() * fonts.length)];
     }
@@ -69,6 +82,22 @@ function randomizeTextFonts(root) {
     if (root instanceof HTMLElement) {
         root.querySelectorAll('input, textarea').forEach(randomizeElementFont);
     }
+}
+
+function restoreDetachedElementFonts(root) {
+    if (!(root instanceof HTMLElement)) {
+        return;
+    }
+
+    const restoreIfDetached = (element) => {
+        if (!element.isConnected && assignedElements.has(element)) {
+            element.style.fontFamily = assignedElements.get(element);
+            assignedElements.delete(element);
+        }
+    };
+
+    restoreIfDetached(root);
+    root.querySelectorAll('*').forEach(restoreIfDetached);
 }
 
 export function setRandomTextFontsEnabled(value) {
@@ -97,10 +126,11 @@ export function setRandomTextFontsEnabled(value) {
 
         mutations.forEach((mutation) => {
             if (mutation.type === 'characterData') {
-                randomizeElementFont(mutation.target.parentElement);
+                randomizeElementFont(mutation.target.parentElement, true);
                 return;
             }
 
+            mutation.removedNodes.forEach(restoreDetachedElementFonts);
             mutation.addedNodes.forEach(randomizeTextFonts);
         });
     });

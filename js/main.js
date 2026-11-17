@@ -23,7 +23,6 @@ export const store = Vue.reactive({
     },
     toggleEasterEgg() {
         this.easterEggEnabled = !this.easterEggEnabled;
-        setRandomTextFontsEnabled(this.easterEggEnabled);
         this.siteTitle = this.easterEggEnabled
             ? 'I LOVE TOM PEARL'
             : initialSiteTitle;
@@ -59,6 +58,7 @@ const router = VueRouter.createRouter({
 app.use(router);
 
 app.mount('#app');
+setRandomTextFontsEnabled(true);
 
 const music = document.getElementById('background-music');
 if (music) {

@@ -39,7 +39,30 @@ export function getYoutubeIdFromUrl(url) {
 
 export function embed(video) {
     const id = getYoutubeIdFromUrl(video);
-    return id ? `https://www.youtube.com/embed/${id}` : '';
+    if (id) {
+        return `https://www.youtube.com/embed/${id}`;
+    }
+
+    if (typeof video !== 'string') {
+        return '';
+    }
+
+    try {
+        const parsed = new URL(video.trim());
+        if (
+            parsed.hostname !== 'medal.tv' &&
+            !parsed.hostname.endsWith('.medal.tv')
+        ) {
+            return '';
+        }
+
+        const medalId = parsed.pathname.match(/\/clips?\/([A-Za-z0-9_-]+)(?:\/|$)/)?.[1];
+        return medalId
+            ? `https://medal.tv/clip/${medalId}/?autoplay=0&donate=0`
+            : '';
+    } catch {
+        return '';
+    }
 }
 
 export function localize(num) {

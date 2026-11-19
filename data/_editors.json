@@ -1,28 +1,23 @@
 [
     {
         "role": "owner",
+        "name": "CashMonkey78",
+        "link": "https://www.youtube.com/@CashMonkey78"
+    },
+    {
+        "role": "admin",
         "name": "Squeeg",
         "link": "https://www.youtube.com/@squeeg-gaming"
     },
     {
-        "role": "admin",
-        "name": "ApMars",
-        "link": "https://www.youtube.com/@Wzoinkoff"
-    },
-    {
         "role": "helper",
-        "name": "List Helper",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "randomperson_360",
+        "link": "https://www.youtube.com/@randomperson_3600"
     },
     {
         "role": "trial",
-        "name": "Trial List Helper",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
-    },
-    {
-        "role": "dev",
-        "name": "CashMonkey78",
-        "link": "https://www.youtube.com/@CashMonkey78"
+        "name": "Radiant",
+        "link": "https://www.youtube.com/@youtube"
     },
     {
         "role": "dev",

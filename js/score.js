@@ -19,6 +19,9 @@ export function score(rank, percent, minPercent) {
         return 0;
     }
 
+    if (safeRank < 1 || safePercent < 0 || safePercent > 100 || safeMinPercent < 1) {
+        return 0;
+    }
     if (safeRank > 150) {
         return 0;
     }

@@ -76,7 +76,7 @@ export default {
                         </div>
                         <!-- Remaining Levels -->
                         <template v-if="givenUp && showRemaining">
-                            <div class="level" v-for="(level, i) in levels.slice(progression.length + 1, levels.length - currentPercentage + progression.length)">
+                            <div class="level" v-for="(level, i) in levels.slice(progression.length + 1)">
                                 <a :href="level.video" target="_blank" class="video">
                                     <img :src="getThumbnailFromId(getYoutubeIdFromUrl(level.video))" alt="">
                                 </a>
@@ -127,8 +127,14 @@ export default {
                 return;
             }
 
+            if (!this.isValidRouletteState(roulette)) {
+                localStorage.removeItem('roulette');
+                return;
+            }
+
             this.levels = roulette.levels;
-            this.progression = roulette.progression;
+            this.progression = roulette.progression.map(Number);
+            this.givenUp = roulette.givenUp === true;
         } catch {
             localStorage.removeItem('roulette');
         }
@@ -161,6 +167,48 @@ export default {
         shuffle,
         getThumbnailFromId,
         getYoutubeIdFromUrl,
+        isValidRouletteState(roulette) {
+            if (
+                !roulette ||
+                !Array.isArray(roulette.levels) ||
+                !Array.isArray(roulette.progression)
+            ) {
+                return false;
+            }
+
+            if (!roulette.levels.every((level) =>
+                level &&
+                typeof level === 'object' &&
+                typeof level.name === 'string' &&
+                typeof level.video === 'string'
+            )) {
+                return false;
+            }
+
+            if (roulette.progression.length > roulette.levels.length) {
+                return false;
+            }
+
+            let previousPercentage = 0;
+            return roulette.progression.every((percentage) => {
+                const numericPercentage = Number(percentage);
+                if (
+                    typeof percentage !== 'number' &&
+                    typeof percentage !== 'string'
+                ) {
+                    return false;
+                }
+                if (
+                    !Number.isFinite(numericPercentage) ||
+                    numericPercentage <= previousPercentage ||
+                    numericPercentage > 100
+                ) {
+                    return false;
+                }
+                previousPercentage = numericPercentage;
+                return true;
+            });
+        },
         async onStart() {
             if (this.isActive) {
                 this.showToast('Give up before starting a new roulette.');
@@ -221,32 +269,33 @@ export default {
                 JSON.stringify({
                     levels: this.levels,
                     progression: this.progression,
+                    givenUp: this.givenUp,
                 }),
             );
         },
         onDone() {
-            if (!this.percentage) {
+            if (this.percentage === undefined || this.percentage === null || this.percentage === '') {
                 return;
             }
 
+            const percentage = Number(this.percentage);
             if (
-                this.percentage <= this.currentPercentage ||
-                this.percentage > 100
+                !Number.isFinite(percentage) ||
+                percentage <= this.currentPercentage ||
+                percentage > 100
             ) {
                 this.showToast('Invalid percentage.');
                 return;
             }
 
-            this.progression.push(this.percentage);
+            this.progression.push(percentage);
             this.percentage = undefined;
 
             this.save();
         },
         onGiveUp() {
             this.givenUp = true;
-
-            // Save progress
-            localStorage.removeItem('roulette');
+            this.save();
         },
         onImport() {
             if (
@@ -268,23 +317,18 @@ export default {
 
             const file = this.fileInput.files[0];
 
-            if (file.type !== 'application/json') {
-                this.showToast('Invalid file.');
-                return;
-            }
-
             try {
                 const roulette = JSON.parse(await file.text());
 
-                if (!roulette.levels || !roulette.progression) {
+                if (!this.isValidRouletteState(roulette)) {
                     this.showToast('Invalid file.');
                     return;
                 }
 
                 this.levels = roulette.levels;
-                this.progression = roulette.progression;
+                this.progression = roulette.progression.map(Number);
+                this.givenUp = roulette.givenUp === true;
                 this.save();
-                this.givenUp = false;
                 this.showRemaining = false;
                 this.percentage = undefined;
             } catch {
@@ -297,14 +341,15 @@ export default {
                 [JSON.stringify({
                     levels: this.levels,
                     progression: this.progression,
+                    givenUp: this.givenUp,
                 })],
                 { type: 'application/json' },
             );
             const a = document.createElement('a');
             a.href = URL.createObjectURL(file);
-            a.download = 'tsl_roulette';
+            a.download = 'tsl_roulette.json';
             a.click();
-            URL.revokeObjectURL(a.href);
+            setTimeout(() => URL.revokeObjectURL(a.href), 0);
         },
         showToast(msg) {
             this.toasts.push(msg);

@@ -83,6 +83,16 @@ export async function fetchLeaderboard() {
             return;
         }
 
+        if (
+            !level ||
+            typeof level.verifier !== 'string' ||
+            !level.verifier ||
+            !Array.isArray(level.records)
+        ) {
+            errs.push(level?.path || `_level-${rank + 1}`);
+            return;
+        }
+
         // Verification
         const verifier = Object.keys(scoreMap).find(
             (u) => u.toLowerCase() === level.verifier.toLowerCase(),
@@ -102,6 +112,21 @@ export async function fetchLeaderboard() {
 
         // Records
         level.records.forEach((record) => {
+            if (
+                !record ||
+                typeof record.user !== 'string' ||
+                !record.user
+            ) {
+                errs.push(level.path || `_level-${rank + 1}`);
+                return;
+            }
+
+            const recordPercent = Number(record.percent);
+            if (!Number.isFinite(recordPercent) || recordPercent < 0 || recordPercent > 100) {
+                errs.push(level.path || `_level-${rank + 1}`);
+                return;
+            }
+
             const user = Object.keys(scoreMap).find(
                 (u) => u.toLowerCase() === record.user.toLowerCase(),
             ) || record.user;
@@ -111,7 +136,7 @@ export async function fetchLeaderboard() {
                 progressed: [],
             };
             const { completed, progressed } = scoreMap[user];
-            if (record.percent === 100) {
+            if (recordPercent === 100) {
                 completed.push({
                     rank: rank + 1,
                     level: level.name,
@@ -124,8 +149,8 @@ export async function fetchLeaderboard() {
             progressed.push({
                 rank: rank + 1,
                 level: level.name,
-                percent: record.percent,
-                score: score(rank + 1, record.percent, level.percentToQualify),
+                percent: recordPercent,
+                score: score(rank + 1, recordPercent, level.percentToQualify),
                 link: record.link,
             });
         });

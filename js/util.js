@@ -38,7 +38,8 @@ export function getYoutubeIdFromUrl(url) {
 }
 
 export function embed(video) {
-    return `https://www.youtube.com/embed/${getYoutubeIdFromUrl(video)}`;
+    const id = getYoutubeIdFromUrl(video);
+    return id ? `https://www.youtube.com/embed/${id}` : '';
 }
 
 export function localize(num) {
